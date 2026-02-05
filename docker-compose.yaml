@@ -1,0 +1,58 @@
+version: "3.9"
+
+# --- The Smart Base ---
+x-tunnel-base: &tunnel-base
+  image: bitnami/kubectl:latest
+  restart: always
+  network_mode: bridge
+  volumes:
+    # MOUNT: The entire folder to a neutral path
+    - ${LOCAL_KUBE_DIR}:/kube-mount:ro
+  environment:
+    # CONFIG: Construct the internal path based on the .env filename
+    - KUBE_FILE_PATH=/kube-mount/${KUBE_FILENAME}
+    - CTX=${DEFAULT_CTX}
+    - NS=${DEFAULT_NS}
+    # Placeholders
+    - SVC=
+    - PORTS=
+  entrypoint:
+    - /bin/sh
+    - -c
+    - |
+      echo "--> Using Config: $$KUBE_FILE_PATH"
+      echo "--> Forwarding $$SVC ($$NS) on $$PORTS"
+      
+      while true; do
+        kubectl port-forward \
+          --kubeconfig "$$KUBE_FILE_PATH" \
+          --context "$$CTX" \
+          --namespace "$$NS" \
+          --address 0.0.0.0 \
+          svc/"$$SVC" $$PORTS
+        
+        echo "--> Connection dropped. Retrying in 3s..."
+        sleep 3
+      done
+
+services:
+
+  # --- Service 1: Database ---
+  postgres-tunnel:
+    <<: *tunnel-base
+    container_name: dev-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - SVC=postgres-db
+      - PORTS=5432:5432
+
+  # --- Service 2: Backend API ---
+  backend-tunnel:
+    <<: *tunnel-base
+    container_name: dev-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SVC=my-api
+      - PORTS=8080:80
