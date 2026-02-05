@@ -9,7 +9,14 @@ A Docker Compose solution to maintain persistent, auto-reconnecting `kubectl por
 
 ## Setup
 
-1. **Configure Environment**
+1. **Get them files**
+```bash
+curl -L -O https://raw.githubusercontent.com/oguzhan-yilmaz/persistent-kube-port-forward/refs/heads/main/docker-compose.yaml
+curl -L -O https://raw.githubusercontent.com/oguzhan-yilmaz/persistent-kube-port-forward/refs/heads/main/.env.example
+```
+
+
+2. **Configure Environment**
 Create a `.env` file from the example.
 
 ```bash
@@ -17,7 +24,7 @@ cp .env.example .env
 ```
 
 
-2. **Set Variables**
+3. **Set Variables**
 
 Edit `.env` to match your local kubeconfig location and cluster defaults.
 
