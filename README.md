@@ -41,6 +41,33 @@ DEFAULT_NS=default
 ```
 
 
+## Adding New Tunnels
+
+To add a new port forward, append a new service block to `docker-compose.yml`. Inherit from `x-tunnel-base` and define the specific service targets.
+
+**Example Block:**
+
+```yaml
+  new-service-tunnel:
+    <<: *tunnel-base
+    container_name: dev-new-service
+    ports:
+      - "9090:9090"
+    environment:
+      - SVC=target-service-name
+      - PORTS=9090:80
+      # Optional: Override defaults
+      # - NS=other-namespace
+
+```
+
+**Variables:**
+
+* `SVC`: The Kubernetes Service name.
+* `PORTS`: The port mapping formatted as `LOCAL_PORT:REMOTE_PORT`.
+* `NS` (Optional): Override the default namespace defined in `.env`.
+
+
 
 ## Usage
 
@@ -71,29 +98,3 @@ docker compose logs -f
 docker compose logs -f dev-backend
 
 ```
-
-## Adding New Tunnels
-
-To add a new port forward, append a new service block to `docker-compose.yml`. Inherit from `x-tunnel-base` and define the specific service targets.
-
-**Example Block:**
-
-```yaml
-  new-service-tunnel:
-    <<: *tunnel-base
-    container_name: dev-new-service
-    ports:
-      - "9090:9090"
-    environment:
-      - SVC=target-service-name
-      - PORTS=9090:80
-      # Optional: Override defaults
-      # - NS=other-namespace
-
-```
-
-**Variables:**
-
-* `SVC`: The Kubernetes Service name.
-* `PORTS`: The port mapping formatted as `LOCAL_PORT:REMOTE_PORT`.
-* `NS` (Optional): Override the default namespace defined in `.env`.
