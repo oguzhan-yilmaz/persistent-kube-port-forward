@@ -28,14 +28,14 @@ cp .env.example .env
 
 Edit `.env` to match your local kubeconfig location and cluster defaults.
 
+The only important one is `LOCAL_KUBE_DIR`, you can override others in each service definitions `.environment` block. 
+
 ```bash
 # Path to the directory containing your config (e.g., ~/.kube)
 LOCAL_KUBE_DIR=~/.kube
 
 # Specific filename to use (e.g., config, k3s.yaml)
 KUBE_FILENAME=config
-
-# Default Cluster Context and Namespace
 DEFAULT_CTX=my-cluster-context
 DEFAULT_NS=default
 ```
