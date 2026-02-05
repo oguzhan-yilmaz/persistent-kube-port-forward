@@ -12,7 +12,7 @@ A Docker Compose solution to maintain persistent, auto-reconnecting `kubectl por
 1. **Get them files**
 ```bash
 curl -L -O https://raw.githubusercontent.com/oguzhan-yilmaz/persistent-kube-port-forward/refs/heads/main/docker-compose.yaml
-curl -L -O https://raw.githubusercontent.com/oguzhan-yilmaz/persistent-kube-port-forward/refs/heads/main/.env.example
+curl -L -O  https://raw.githubusercontent.com/oguzhan-yilmaz/persistent-kube-port-forward/refs/heads/main/.env.example
 ```
 
 
@@ -67,6 +67,12 @@ To add a new port forward, append a new service block to `docker-compose.yml`. I
 * `PORTS`: The port mapping formatted as `LOCAL_PORT:REMOTE_PORT`.
 * `NS` (Optional): Override the default namespace defined in `.env`.
 
+
+**List existing services**
+
+```bash
+kubectl get svc --all-namespaces -o custom-columns='NAMESPACE:.metadata.namespace,SERVICE:.metadata.name,REMOTE_PORT:.spec.ports[*].port'
+```
 
 
 ## Usage
